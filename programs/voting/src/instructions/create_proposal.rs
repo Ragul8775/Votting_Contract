@@ -23,5 +23,17 @@ pub fn handler(ctx:Context<CreateProposal>,title:String,options:Vec<String>, sta
    require!((2..= MAX_OPTIONS).contains(&options.len()), VottingError::InvalidOptionsLength);
    require!(start_ts >= now && end_ts > start_ts, VottingError::InvalidStartTime);
 
+   let p = &mut ctx.accounts.proposal;
+   p.id = cfg.proposal_count;
+    p.title = title;
+    p.creator = ctx.accounts.admin.key();
+    p.options = options.clone();
+    p.vote_count = vec![0; options.len()];
+    p.start_ts = start_ts;
+    p.end_ts = end_ts;
+    p.status = ProposalStatus::Draft;
+
+    cfg.proposal_count = cfg.proposal_count.checked_add(1).ok_or(VottingError::InvalidOptionsLength)?;
+    
     Ok(())
 }
