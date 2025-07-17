@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
-use crate::state::{GovernanceConfig,Proposal,ProposalStatus};
-use create::error::VottingError;
-use create::constants::*;
+use crate::state::{GovernanceConfig,Proposal,ProposalState};
+use crate::error::VottingError;
+use crate::constants::*;
 
 #[derive(Accounts)]
 #[instruction(title:String,options:Vec<String>)]
@@ -21,7 +21,7 @@ pub fn handler(ctx:Context<CreateProposal>,title:String,options:Vec<String>, sta
    let now = Clock::get()?.unix_timestamp;
 
    require!((2..= MAX_OPTIONS).contains(&options.len()), VottingError::InvalidOptionsLength);
-   require!(start_ts >= now && end_ts > start_ts, VottingError::InvalidStartTime);
+   require!(start_ts >= now && end_ts > start_ts, VottingError::InvalidTimeStamps);
 
    let p = &mut ctx.accounts.proposal;
    p.id = cfg.proposal_count;
@@ -31,7 +31,7 @@ pub fn handler(ctx:Context<CreateProposal>,title:String,options:Vec<String>, sta
     p.vote_count = vec![0; options.len()];
     p.start_ts = start_ts;
     p.end_ts = end_ts;
-    p.status = ProposalStatus::Draft;
+    p.status = ProposalState::Draft;
 
     cfg.proposal_count = cfg.proposal_count.checked_add(1).ok_or(VottingError::InvalidOptionsLength)?;
     

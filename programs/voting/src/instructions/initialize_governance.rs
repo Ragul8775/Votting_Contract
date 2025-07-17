@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
 use crate::state::GovernanceConfig;
 use crate::constants::*;
-use crate::error::VottingError;
 
 
 #[derive(Accounts)]
@@ -21,7 +20,7 @@ pub struct InitializeGovernance<'info>{
 
 pub fn handler(ctx:Context<InitializeGovernance>)-> Result<()>{
     let cfg = &mut ctx.accounts.config;
-    cfg.admin = *ctx.account.admin.key;
+    cfg.admin = *ctx.accounts.admin.key;
     cfg.proposal_count = 0;
     
     Ok(())

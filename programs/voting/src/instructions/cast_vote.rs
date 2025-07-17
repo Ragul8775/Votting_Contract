@@ -16,7 +16,7 @@ pub struct CastVote<'info>{
 
 pub fn handler(ctx:Context<CastVote>, choice_index:u8) ->Result<()>{
     let p = &mut ctx.accounts.proposal;
-    require!(p.state == ProposalState::Active, VottingError::ProposalNotActive);
+    require!(p.status == ProposalState::Active, VottingError::ProposalNotActive);
 
     let now = Clock::get()?.unix_timestamp;
     require!(now <= p.end_ts, VottingError::VotingPeriodEnded);
@@ -26,7 +26,7 @@ pub fn handler(ctx:Context<CastVote>, choice_index:u8) ->Result<()>{
     b.voter = ctx.accounts.voter.key();
     b.choice_index = choice_index;
 
-    p.vote_counts[choice_index as usize] = p.vote_counts[choice_index as usize].checked_add(1).unwrap();
+    p.vote_count[choice_index as usize] = p.vote_count[choice_index as usize].checked_add(1).unwrap();
 
     Ok(())
 }

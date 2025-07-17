@@ -1,8 +1,8 @@
 use anchor_lang::prelude::*;
-use create::constants::*;
+use crate::constants::*;
 
-#[accounts]
-pub struct GovernaneConfig {
+#[account]
+pub struct GovernanceConfig {
     pub admin : Pubkey,
     pub proposal_count: u64,
 }
@@ -13,7 +13,7 @@ impl GovernanceConfig {
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq)]
-pub enum ProposalStatus{
+pub enum ProposalState{
     Draft,
     Active,
     Closed

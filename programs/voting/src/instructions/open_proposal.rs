@@ -1,6 +1,6 @@
-use achor_lang::prelude::*;
-use crate::state::{Proposal, ProposalStatus};
-use crate::error::VotingError;
+use anchor_lang::prelude::*;
+use crate::state::{Proposal, ProposalState};
+use crate::error::VottingError;
 
 #[derive(Accounts)]
 pub struct OpenProposal<'info>{
@@ -9,13 +9,13 @@ pub struct OpenProposal<'info>{
     pub creator: Signer<'info>,
 }
 
-pub fn handler(ctx:Context<OpenProposal>)->Result<()>{
+pub fn handler(ctx:Context<OpenProposal>)-> Result<()>{
     let p = &mut ctx.accounts.proposal;
-    reequire!(p.status == ProposalStatus::Draft, VotingError::InvalidProposalStatus);
+    require!(p.status == ProposalState::Draft, VottingError::InvalidProposalState);
 
     let now = Clock::get()?.unix_timestamp;
 
-    require!(now >= p.start_ts && now <= p.end_ts, VotingError::InvalidProposalTiming);
+    require!(now >= p.start_ts && now <= p.end_ts, VottingError::VotingPeriodNotActive);
 
     let now = Clock::get()?.unix_timestamp;
     require!(now >= p.start_ts , VottingError::VotingPeriodNotActive);
