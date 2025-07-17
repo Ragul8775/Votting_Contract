@@ -7,6 +7,9 @@ pub enum VottingError {
     #[msg("Voting period not active.")]
     VotingPeriodNotActive,
 
+    #[msg("Voting period has ended.")]
+    VotingPeriodEnded,
+
     #[msg("Choice index out of bounds.")]
     ChoiceIndexOutOfBounds,
 
