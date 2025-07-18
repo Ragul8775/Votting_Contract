@@ -17,9 +17,8 @@ pub fn handler(ctx:Context<OpenProposal>)-> Result<()>{
 
     require!(now >= p.start_ts && now <= p.end_ts, VottingError::VotingPeriodNotActive);
 
-    let now = Clock::get()?.unix_timestamp;
     require!(now >= p.start_ts , VottingError::VotingPeriodNotActive);
-    p.status = ProposalStatus::Active;
+    p.status = ProposalState::Active;
 
     Ok(())
 }

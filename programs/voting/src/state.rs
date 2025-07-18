@@ -27,7 +27,7 @@ pub struct Proposal {
     pub vote_count: Vec<u64>,
     pub start_ts: i64,
     pub end_ts: i64,
-    pub status:ProposalStatus,
+    pub status:ProposalState,
 }
 
 impl Proposal {

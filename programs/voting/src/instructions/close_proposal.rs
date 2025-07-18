@@ -16,6 +16,6 @@ pub fn handle(ctx:Context<CloseProposal>)->Result<()>{
     let now = Clock::get()?.unix_timestamp;
     require!(now >= p.end_ts, VottingError::ProposalNotEnded);
 
-    p.status = ProposalStatus::Closed;
+    p.status = ProposalState::Closed;
     Ok(())
 }
